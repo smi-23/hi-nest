@@ -1,11 +1,20 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { MoviesService } from './movies.service';
+import { Movie } from './entities/movie.entitiy';
 
 @Controller('movies') // entry point
 export class MoviesController {
 
+    constructor(readonly moviesService: MoviesService){}
+
+    // @Get()
+    // getAll() {
+    //     return 'This will return all movies';
+    // }
+
     @Get()
-    getAll() {
-        return 'This will return all movies';
+    getAll():Movie[] {
+        return this.moviesService.getAll();
     }
 
     // search를 아래의 getone함수에서 id로 인식하게 하지 않기 위해서 위로 올려줌 
@@ -14,20 +23,37 @@ export class MoviesController {
         return `we are searching for a movie made after: ${searchingYear}`;
     }
 
+    // @Get('/:id')
+    // getOne(@Param('id') movieId: string) {
+    //     return `This will return one movie with the id: ${movieId}`;
+    // }
+
     @Get('/:id')
-    getOne(@Param('id') movieId: string) {
-        return `This will return one movie with the id: ${movieId}`;
+    getOne(@Param('id') movieId: string):Movie {
+        return this.moviesService.getOne(movieId);
     }
+
+
+    // @Post()
+    // create(@Body() movieData) {
+    //     // console.log(movieData);
+    //     return movieData;
+    // }
 
     @Post()
     create(@Body() movieData) {
         // console.log(movieData);
-        return movieData;
+        return this.moviesService.create(movieData);
     }
+
+    // @Delete('/:id')
+    // remove(@Param('id') movieId: string) {
+    //     return `this will delete a movie with the id: ${movieId}`;
+    // }
 
     @Delete('/:id')
     remove(@Param('id') movieId: string) {
-        return `this will delete a movie with the id: ${movieId}`;
+        return this.moviesService.deleteOne(movieId);
     }
 
     // 리소스의 일부분만 업데이트할 경우 patch 전체를 업데이트할 경우 put
